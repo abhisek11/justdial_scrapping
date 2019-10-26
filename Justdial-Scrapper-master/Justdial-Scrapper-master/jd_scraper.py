@@ -32,19 +32,20 @@ def which_digit(html):
 # 		return ''
 
 def get_phone_number(body):
-    i=0
-    for item in body.find('p',{'class':'contact-info'}):
-        i+=1
-        if(i==2):
-            phoneNo=''
-            try:
-                for element in item.find_all(class_=True):
-                    classes = []
-                    classes.extend(element["class"])
-                    phoneNo+=str((which_digit(classes[1])))
-            except:
-                pass
-            return phoneNo
+	i=0
+	if body.find('p',{'class':'contact-info'}):
+		for item in body.find('p',{'class':'contact-info'}):
+			i+=1
+			if(i==2):
+				phoneNo=''
+				try:
+					for element in item.find_all(class_=True):
+						classes = []
+						classes.extend(element["class"])
+						phoneNo+=str((which_digit(classes[1])))
+				except:
+					pass
+				return phoneNo
 
 def get_rating(body):
 	rating = 0.0
@@ -81,7 +82,7 @@ service_count = 1
 
 
 fields = ['Name', 'Phone', 'Rating', 'Rating Count', 'Address', 'Location']
-out_file = open('Readymade-Garment-Retailers_agra.csv','w')
+out_file = open('Mumbai_Aluminium_wholeseller_data.csv','w')
 csvwriter = csv.DictWriter(out_file, delimiter=',', fieldnames=fields)
 
 # Write fields first
@@ -90,10 +91,11 @@ csvwriter.writerow(dict((fn,fn) for fn in fields))
 while True:
 
 	# Check if reached end of result
-	if page_number > 3:
+	if page_number > 5:
 		break
 	driver= webdriver.Chrome()
-	driver.get('https://www.justdial.com/Kolkata/gym')
+	# driver.get('https://www.justdial.com/Kolkata/gym')
+	driver.get('https://www.justdial.com/Mumbai/Aluminium-Foil-Wholesalers/nct-10014788')
 	url = driver.page_source
 	print(url)
 
