@@ -77,67 +77,71 @@ def get_location(body):
 	
 	return latitutde + ", " + longitude
 
-page_number = 1
-service_count = 1
+n=10
+for i in range(1,n+1):
+	page_number = 1
+	service_count = 1
 
 
-fields = ['Name', 'Phone', 'Rating', 'Rating Count', 'Address', 'Location']
-out_file = open('Mumbai_Aluminium_wholeseller_data.csv','w')
-csvwriter = csv.DictWriter(out_file, delimiter=',', fieldnames=fields)
+	fields = ['Name', 'Phone', 'Rating', 'Rating Count', 'Address', 'Location']
+	out_file = open('Delhi_Aluminium wholeseller-wholeseller_data'+str(i)+'.csv','w')
+	csvwriter = csv.DictWriter(out_file, delimiter=',', fieldnames=fields)
 
-# Write fields first
-csvwriter.writerow(dict((fn,fn) for fn in fields))
+	# Write fields first
+	csvwriter.writerow(dict((fn,fn) for fn in fields))
 
-while True:
+	while True:
 
-	# Check if reached end of result
-	if page_number > 5:
-		break
-	driver= webdriver.Chrome()
-	# driver.get('https://www.justdial.com/Kolkata/gym')
-	driver.get('https://www.justdial.com/Mumbai/Aluminium-Foil-Wholesalers/nct-10014788')
-	url = driver.page_source
-	print(url)
+		# Check if reached end of result
+		if page_number > 1:
+			break
+		driver= webdriver.Chrome()
+		# driver.get('https://www.justdial.com/Kolkata/gym')
+		# driver.get('https://www.justdial.com/Mumbai/Aluminium-Foil-Wholesalers/nct-10014788')
 
-
-	soup = BeautifulSoup(url, "html.parser")
-	services = soup.find_all('li', {'class': 'cntanr'})
+		driver.get('https://www.justdial.com/Delhi/Aluminium-Foil-Wholesalers/nct-10014788/page-'+str(i))
+		url = driver.page_source
+		print(url)
 
 
-	# Iterate through the 10 results in the page
-	for service_html in services:
+		soup = BeautifulSoup(url, "html.parser")
+		services = soup.find_all('li', {'class': 'cntanr'})
 
-		# Parse HTML to fetch data
-		dict_service = {}
-		name = get_name(service_html)
-		phone = get_phone_number(service_html)
-		rating = get_rating(service_html)
-		count = get_rating_count(service_html)
-		address = get_address(service_html)
-		location = get_location(service_html)
-		if name != None:
-			dict_service['Name'] = name
-		if phone != None:
-			print('getting phone number')
-			dict_service['Phone'] = phone
-		if rating != None:
-			dict_service['Rating'] = rating
-		if count != None:
-			dict_service['Rating Count'] = count
-		if address != None:
-			dict_service['Address'] = address
-		if location != None:
-			dict_service['Address'] = location
 
-		# Write row to CSV
-		csvwriter.writerow(dict_service)
+		# Iterate through the 10 results in the page
+		for service_html in services:
 
-		print("#" + str(service_count) + " " , dict_service)
-		service_count += 1
+			# Parse HTML to fetch data
+			dict_service = {}
+			name = get_name(service_html)
+			phone = get_phone_number(service_html)
+			rating = get_rating(service_html)
+			count = get_rating_count(service_html)
+			address = get_address(service_html)
+			location = get_location(service_html)
+			if name != None:
+				dict_service['Name'] = name
+			if phone != None:
+				print('getting phone number')
+				dict_service['Phone'] = phone
+			if rating != None:
+				dict_service['Rating'] = rating
+			if count != None:
+				dict_service['Rating Count'] = count
+			if address != None:
+				dict_service['Address'] = address
+			if location != None:
+				dict_service['Address'] = location
 
-	page_number += 1
+			# Write row to CSV
+			csvwriter.writerow(dict_service)
 
-out_file.close()
+			print("#" + str(service_count) + " " , dict_service)
+			service_count += 1
+
+		page_number += 1
+
+	out_file.close()
 
 
 
